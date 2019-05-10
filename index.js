@@ -267,15 +267,15 @@ class Turtle {
 
   setNewCoordinates ({ x, y }) {
 
-    this.x = this.x + x
-    this.y = this.y + y
+    this.x = (this.x + x)
+    this.y = (this.y + y)
   }
 
   getCoordinatesOffset (length) {
 
     return {
-      x: length * Math.cos(this.heading),
-      y: length * Math.sin(this.heading)
+      x: length * Math.cos(this.heading * (Math.PI / 180)),
+      y: length * Math.sin(this.heading * (Math.PI / 180))
     }
   }
 
@@ -284,18 +284,26 @@ class Turtle {
     if (degrees < 0) {
 
       return this.normalizeHeading(360 + degrees)
-    } else if (degrees > 360) {
+    }
+
+    if (degrees > 360) {
 
       return this.normalizeHeading(degrees - 360)
-    } else {
-
-      return degrees
     }
+
+    if (degrees === 360) {
+
+      return 0
+    }
+
+    return degrees
   }
 
   setHeading (direction, degrees) {
 
-    const sign = direction === `left` ? -1 : 1
+    this.previousHeading = this.heading
+
+    const sign = direction === `left` ? 1 : -1
 
     const newAngle = this.heading + (sign * degrees)
 
@@ -361,6 +369,18 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   repeatStatement (context) {
 
+    console.log(context)
+
+    const count = this.visit(context.atomicStatement)
+
+    let step = 0
+
+    while (step < count) {
+
+      this.visit(context.blockStatement)
+
+      step++
+    }
   }
 
   penToggleStatement (context) {
@@ -392,13 +412,11 @@ class TurtleInterpreter extends BaseCstVisitor {
 
     const degrees = this.visit(context.atomicStatement)
 
-    console.log(`turtle's old heading is ${this.turtle.heading}`)
-
     console.log(`rotating ${direction} by ${degrees}`)
 
     this.turtle.setHeading(direction, degrees)
 
-    console.log(`turtle's new heading is ${this.turtle.heading}`)
+    console.log(`turtle's new heading is ${this.turtle.heading} (from ${this.turtle.previousHeading})`)
   }
 
   functionStatement (context) {
@@ -419,10 +437,14 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   blockStatement (context) {
 
+    for (const statement of context.statement) {
+
+      this.visit(statement)
+    }
   }
 }
 
-const lexed = TurtleLexer.tokenize(`forward 10 left 90 forward 10 left 90 forward 10 left 90 forward 10`)
+const lexed = TurtleLexer.tokenize(`repeat 4 [left 90 forward 10]`)
 
 parser.input = lexed.tokens
 
