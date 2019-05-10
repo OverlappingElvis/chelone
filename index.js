@@ -3,7 +3,7 @@ const { Parser } = chevrotain
 const fs = require(`fs`)
 const program = require(`commander`)
 
-const { Lexer } = require(`./src/lexer`)
+const { Lexer: TurtleLexer } = require(`./src/lexer`)
 const TurtleParser = require(`./src/parser`)
 const Turtle = require(`./src/turtle`)
 
@@ -23,6 +23,8 @@ class TurtleInterpreter extends BaseCstVisitor {
     super()
 
     this.turtle = new Turtle()
+
+    this.scope = {}
 
     this.validateVisitor()
   }
@@ -60,6 +62,16 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   assignStatement (context) {
 
+    this.scope[context.IDENTIFIER[0].image] = {
+      fn: () => {
+
+        for (const statement of context.statement) {
+
+          this.visit(statement)
+        }
+      },
+      inputs: context.INPUT.map(({ image }) => image)
+    }
   }
 
   repeatStatement (context) {
@@ -109,13 +121,23 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   functionStatement (context) {
 
+    let index = 0
+
+    const functionScope = this.scope[context.IDENTIFIER[0].image]
+
+    for (const input of context.atomicStatement) {
+
+      this.scope[functionScope.inputs[index]] = this.visit(input)
+    }
+
+    functionScope.fn()
   }
 
   atomicStatement (context) {
 
     if (context.INPUT) {
 
-      return context.INPUT.image
+      return this.scope[context.INPUT[0].image]
     } else if (context.INT) {
 
       return parseInt(context.INT[0].image, 10)
@@ -132,7 +154,7 @@ class TurtleInterpreter extends BaseCstVisitor {
   }
 }
 
-const lexed = Lexer.tokenize(program.program)
+const lexed = TurtleLexer.tokenize(program.program)
 
 parser.input = lexed.tokens
 

@@ -60,7 +60,7 @@ module.exports = class TurtleParser extends Parser {
         $.SUBRULE($.statement)
       })
 
-      $.CONSUME(End)
+      $.CONSUME(Tokens.End)
     })
 
     $.RULE(`functionStatement`, () => {
