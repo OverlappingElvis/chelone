@@ -1,5 +1,6 @@
 const chevrotain = require(`chevrotain`)
 const { Lexer, Parser } = chevrotain
+const fs = require(`fs`)
 
 const allTokens = []
 
@@ -256,19 +257,48 @@ const BaseCstVisitor = parser.getBaseCstVisitorConstructor()
 
 class Turtle {
 
-  constructor () {
+  constructor (options) {
 
-    this.x = 0
-    this.y = 0
-    this.heading = 0
-    this.previousHeading = 0
-    this.penDown = false
+    this.bounds = {
+      x: 1000,
+      y: 1000
+    }
+
+    this.x = this.bounds.x / 2
+    this.y = this.bounds.y / 2
+
+    this.heading = 90
+    this.previousHeading = 90
+    this.penDown = true
+
+    this.segments = []
+  }
+
+  render () {
+
+    const svg = [`<svg viewBox="0 0 ${this.bounds.x} ${this.bounds.y}" xmlns="http://www.w3.org/2000/svg">`, ...this.segments, `</svg>`]
+
+    fs.writeFile(`turtle.svg`, svg.join(``), () => {
+
+      console.log(`saved image to turtle.svg`)
+    })
   }
 
   setNewCoordinates ({ x, y }) {
 
-    this.x = (this.x + x)
-    this.y = (this.y + y)
+    const oldX = this.x
+    const newX = this.x + x
+
+    const oldY = this.y
+    const newY = this.y + y
+
+    if (this.penDown === true) {
+
+      this.segments.push(`<line x1="${oldX.toFixed(0)}" y1="${oldY.toFixed(0)}" x2="${newX.toFixed(0)}" y2="${newY.toFixed(0)}" stroke="black" />`)
+    }
+
+    this.x = newX
+    this.y = newY
   }
 
   getCoordinatesOffset (length) {
@@ -309,16 +339,6 @@ class Turtle {
     const newAngle = this.heading + (sign * degrees)
 
     this.heading = this.normalizeHeading(newAngle)
-  }
-
-  penDown () {
-
-    this.penDown = true
-  }
-
-  penUp () {
-
-    this.penDown = false
   }
 }
 
@@ -370,8 +390,6 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   repeatStatement (context) {
 
-    console.log(context)
-
     const count = this.visit(context.atomicStatement)
 
     let step = 0
@@ -386,6 +404,13 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   penToggleStatement (context) {
 
+    if (context.PenToggleOperator[0].image === `penup`) {
+
+      this.turtle.penDown = false
+    } else {
+
+      this.turtle.penDown = true
+    }
   }
 
   movementStatement (context) {
@@ -394,17 +419,9 @@ class TurtleInterpreter extends BaseCstVisitor {
 
     const length = this.visit(context.atomicStatement)
 
-    console.log(`moving ${direction} by ${length}`)
-
-    console.log(`old position: ${this.turtle.x}, ${this.turtle.y}`)
-
     const offset = this.turtle.getCoordinatesOffset(length)
 
-    console.log(`polar coordinate offset: ${offset.x}, ${offset.y}`)
-
     this.turtle.setNewCoordinates(offset)
-
-    console.log(`new position: ${this.turtle.x}, ${this.turtle.y}`)
   }
 
   directionStatement (context) {
@@ -413,11 +430,7 @@ class TurtleInterpreter extends BaseCstVisitor {
 
     const degrees = this.visit(context.atomicStatement)
 
-    console.log(`rotating ${direction} by ${degrees}`)
-
     this.turtle.setHeading(direction, degrees)
-
-    console.log(`turtle's new heading is ${this.turtle.heading} (from ${this.turtle.previousHeading})`)
   }
 
   functionStatement (context) {
@@ -445,7 +458,7 @@ class TurtleInterpreter extends BaseCstVisitor {
   }
 }
 
-const lexed = TurtleLexer.tokenize(`left 45 repeat 4 [left 90 forward 10]`)
+const lexed = TurtleLexer.tokenize(process.argv[2])
 
 parser.input = lexed.tokens
 
@@ -454,3 +467,5 @@ const cst = parser.program()
 const interpreter = new TurtleInterpreter()
 
 interpreter.visit(cst)
+
+interpreter.turtle.render()
