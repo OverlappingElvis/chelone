@@ -254,27 +254,180 @@ const parser = new TurtleParser()
 
 const BaseCstVisitor = parser.getBaseCstVisitorConstructor()
 
+class Turtle {
+
+  constructor () {
+
+    this.x = 0
+    this.y = 0
+    this.heading = 0
+    this.previousHeading = 0
+    this.penDown = false
+  }
+
+  setNewCoordinates ({ x, y }) {
+
+    this.x = this.x + x
+    this.y = this.y + y
+  }
+
+  getCoordinatesOffset (length) {
+
+    return {
+      x: length * Math.cos(this.heading),
+      y: length * Math.sin(this.heading)
+    }
+  }
+
+  normalizeHeading (degrees) {
+
+    if (degrees < 0) {
+
+      return this.normalizeHeading(360 + degrees)
+    } else if (degrees > 360) {
+
+      return this.normalizeHeading(degrees - 360)
+    } else {
+
+      return degrees
+    }
+  }
+
+  setHeading (direction, degrees) {
+
+    const sign = direction === `left` ? -1 : 1
+
+    const newAngle = this.heading + (sign * degrees)
+
+    this.heading = this.normalizeHeading(newAngle)
+  }
+
+  penDown () {
+
+    this.penDown = true
+  }
+
+  penUp () {
+
+    this.penDown = false
+  }
+}
+
 class TurtleInterpreter extends BaseCstVisitor {
 
   constructor () {
 
     super()
 
+    this.turtle = new Turtle()
+
     this.validateVisitor()
+  }
+
+  program (context) {
+
+    for (const statement of context.statement) {
+
+      this.visit(statement)
+    }
+  }
+
+  statement (context) {
+
+    if (context.assignStatement) {
+
+      this.visit(context.assignStatement)
+    } else if (context.repeatStatement) {
+
+      this.visit(context.repeatStatement)
+    } else if (context.penToggleStatement) {
+
+      this.visit(context.penToggleStatement)
+    } else if (context.movementStatement) {
+
+      this.visit(context.movementStatement)
+    } else if (context.directionStatement) {
+
+      this.visit(context.directionStatement)
+    } else if (context.functionStatement) {
+
+      this.visit(context.functionStatement)
+    }
+  }
+
+  assignStatement (context) {
+
+  }
+
+  repeatStatement (context) {
+
+  }
+
+  penToggleStatement (context) {
+
+  }
+
+  movementStatement (context) {
+
+    const direction = context.MovementOperator[0].image
+
+    const length = this.visit(context.atomicStatement)
+
+    console.log(`moving ${direction} by ${length}`)
+
+    console.log(`old position: ${this.turtle.x}, ${this.turtle.y}`)
+
+    const offset = this.turtle.getCoordinatesOffset(length)
+
+    console.log(`polar coordinate offset: ${offset.x}, ${offset.y}`)
+
+    this.turtle.setNewCoordinates(offset)
+
+    console.log(`new position: ${this.turtle.x}, ${this.turtle.y}`)
+  }
+
+  directionStatement (context) {
+
+    const direction = context.DirectionOperator[0].image
+
+    const degrees = this.visit(context.atomicStatement)
+
+    console.log(`turtle's old heading is ${this.turtle.heading}`)
+
+    console.log(`rotating ${direction} by ${degrees}`)
+
+    this.turtle.setHeading(direction, degrees)
+
+    console.log(`turtle's new heading is ${this.turtle.heading}`)
+  }
+
+  functionStatement (context) {
+
+  }
+
+  atomicStatement (context) {
+
+    if (context.INPUT) {
+
+      return context.INPUT.image
+    } else if (context.INT) {
+
+      return parseInt(context.INT[0].image, 10)
+    }
+
+  }
+
+  blockStatement (context) {
+
   }
 }
 
-const lexed = TurtleLexer.tokenize(`to square :length repeat 4 [forward :length left 90] end pendown square 100 penup`)
-
-console.log(`lexer errors?`)
-console.log(lexed.errors)
+const lexed = TurtleLexer.tokenize(`forward 10 left 90 forward 10 left 90 forward 10 left 90 forward 10`)
 
 parser.input = lexed.tokens
 
 const cst = parser.program()
 
-console.log(`parser errors?`)
-console.log(parser.errors)
+const interpreter = new TurtleInterpreter()
 
-console.log(`cst:`)
-console.log(JSON.stringify(cst))
+interpreter.visit(cst)
