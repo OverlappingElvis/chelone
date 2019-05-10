@@ -1,5 +1,3 @@
-const chevrotain = require(`chevrotain`)
-const { Parser } = chevrotain
 const fs = require(`fs`)
 const program = require(`commander`)
 
