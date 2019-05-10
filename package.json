@@ -1,14 +1,15 @@
 {
   "name": "turtle-chevrotain",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "Turtle graphics interpreter implemented using Chevrotain.",
   "main": "index.js",
   "scripts": {
     "turtle": "node index.js"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Jeremy Sher <OverlappingElvis@gmail.com>",
+  "license": "MIT",
   "dependencies": {
-    "chevrotain": "^4.3.3"
+    "chevrotain": "^4.3.3",
+    "commander": "^2.20.0"
   }
 }

@@ -1,6 +1,12 @@
 const chevrotain = require(`chevrotain`)
 const { Lexer, Parser } = chevrotain
 const fs = require(`fs`)
+const program = require(`commander`)
+
+program.version(`0.0.1`)
+  .option(`-P --program [program]`, `Turtle program as quoted string`)
+  .option(`-O --output [filename]`, `Output filename [turtle.svg]`, `turtle.svg`)
+  .parse(process.argv)
 
 const allTokens = []
 
@@ -278,9 +284,9 @@ class Turtle {
 
     const svg = [`<svg viewBox="0 0 ${this.bounds.x} ${this.bounds.y}" xmlns="http://www.w3.org/2000/svg">`, ...this.segments, `</svg>`]
 
-    fs.writeFile(`turtle.svg`, svg.join(``), () => {
+    fs.writeFile(program.output, svg.join(``), () => {
 
-      console.log(`saved image to turtle.svg`)
+      console.log(`saved image to ${program.output}`)
     })
   }
 
@@ -458,7 +464,7 @@ class TurtleInterpreter extends BaseCstVisitor {
   }
 }
 
-const lexed = TurtleLexer.tokenize(process.argv[2])
+const lexed = TurtleLexer.tokenize(program.program)
 
 parser.input = lexed.tokens
 
