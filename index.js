@@ -273,6 +273,7 @@ class Turtle {
 
   getCoordinatesOffset (length) {
 
+    // Math.cos and Math.sin take radians as input so convert from degrees
     return {
       x: length * Math.cos(this.heading * (Math.PI / 180)),
       y: length * Math.sin(this.heading * (Math.PI / 180))
@@ -444,7 +445,7 @@ class TurtleInterpreter extends BaseCstVisitor {
   }
 }
 
-const lexed = TurtleLexer.tokenize(`repeat 4 [left 90 forward 10]`)
+const lexed = TurtleLexer.tokenize(`left 45 repeat 4 [left 90 forward 10]`)
 
 parser.input = lexed.tokens
 
