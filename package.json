@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "chevrotain": "^4.3.3",
-    "lodash": "^4.17.11"
+    "chevrotain": "^4.3.3"
   }
 }
