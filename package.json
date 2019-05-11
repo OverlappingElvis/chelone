@@ -1,5 +1,5 @@
 {
-  "name": "turtle-chevrotain",
+  "name": "chelone",
   "version": "0.0.1",
   "description": "Turtle graphics interpreter implemented using Chevrotain.",
   "main": "index.js",
