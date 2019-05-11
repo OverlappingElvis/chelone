@@ -161,9 +161,9 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   arithmeticStatement (context) {
 
-    const lhs = this.visit(context.atomicStatement[0])
+    const lhs = this.visit(context.minusStatement[0])
 
-    if (!context.atomicStatement[1]) {
+    if (!context.minusStatement[1]) {
 
       return lhs
     }
@@ -172,31 +172,41 @@ class TurtleInterpreter extends BaseCstVisitor {
 
       case `+`:
 
-        return lhs + this.visit(context.atomicStatement[1])
+        return lhs + this.visit(context.minusStatement[1])
       case `-`:
 
-        return lhs - this.visit(context.atomicStatement[1])
+        return lhs - this.visit(context.minusStatement[1])
       case `*`:
 
-        return lhs * this.visit(context.atomicStatement[1])
+        return lhs * this.visit(context.minusStatement[1])
       case `/`:
 
-        return lhs - this.visit(context.atomicStatement[1])
+        return lhs - this.visit(context.minusStatement[1])
     }
+  }
+
+  minusStatement (context) {
+
+    if (context.Minus) {
+
+      return -1 * this.visit(context.atomicStatement)
+    }
+
+    return this.visit(context.atomicStatement)
   }
 
   atomicStatement (context) {
 
-    if (context.INPUT) {
+    if (context.INT) {
+
+      return parseInt(context.INT[0].image, 10)
+    } else if (context.INPUT) {
 
       return this.scope[context.INPUT[0].image]
     } else if (context.VAR) {
 
       return this.scope[context.VAR[0].image]
-    } else if (context.INT) {
-
-      return parseInt(context.INT[0].image, 10)
-    } else if (context.randomStatement) {
+    } else  if (context.randomStatement) {
 
       return this.visit(context.randomStatement)
     }
@@ -204,7 +214,7 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   randomStatement (context) {
 
-    return Math.floor(Math.random() * Math.floor(this.visit(context.atomicStatement)))
+    return Math.floor(Math.random() * Math.floor(this.visit(context.minusStatement)))
   }
 
   blockStatement (context) {
@@ -222,7 +232,7 @@ if (lexed.errors.length) {
 
   console.log(`Lexer error!`)
 
-  console.log(lexer.errors)
+  console.log(lexed.errors)
 
   throw new Error()
 }
