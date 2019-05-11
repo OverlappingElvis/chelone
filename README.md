@@ -4,6 +4,8 @@
 
 Chelone is an interpreter for a subset of the Logo programming language (mostly the turtle parts) implemented in [chevrotain](https://raw.githubusercontent.com/SAP/chevrotain/).
 
+This is *not* a full implementation of Logo, but is generally compatible with its syntax.
+
 ## Usage
 
 -   `npm install`
