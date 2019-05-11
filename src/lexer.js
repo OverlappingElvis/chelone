@@ -112,8 +112,42 @@ createToken({
 })
 
 createToken({
+  name: `ArithmeticOperator`,
+  pattern: Lexer.NA
+})
+
+createToken({
+  name: `Plus`,
+  pattern: /\+/,
+  categories: Tokens.ArithmeticOperator
+})
+
+createToken({
+  name: `Minus`,
+  pattern: /-/,
+  categories: Tokens.ArithmeticOperator
+})
+
+createToken({
+  name: `Multiply`,
+  pattern: /\*/,
+  categories: Tokens.ArithmeticOperator
+})
+
+createToken({
+  name: `Divide`,
+  pattern: /\//,
+  categories: Tokens.ArithmeticOperator
+})
+
+createToken({
   name: `INT`,
   pattern: /[0-9]+/
+})
+
+createToken({
+  name: `VAR`,
+  pattern: /"[a-zA-Z]+/
 })
 
 createToken({
@@ -124,11 +158,6 @@ createToken({
 createToken({
   name: `IDENTIFIER`,
   pattern: /[a-zA-Z]+/
-})
-
-createToken({
-  name: `VAR`,
-  pattern: /"[a-zA-Z]/
 })
 
 module.exports = {

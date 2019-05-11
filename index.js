@@ -6,7 +6,7 @@ const TurtleParser = require(`./src/parser`)
 const Turtle = require(`./src/turtle`)
 
 program.version(`0.0.1`)
-  .option(`-P --program [program]`, `Turtle program as quoted string`)
+  .option(`-P --program [program]`, `Turtle program as quoted string`, `make "length 250 to growsquare :length repeat 4 [forward :length right 90] make "length :length + 50 end repeat 10 [growsquare "length right 36]`)
   .option(`-O --output [filename]`, `Output filename [turtle.svg]`, `turtle.svg`)
   .parse(process.argv)
 
@@ -69,7 +69,7 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   variableStatement (context) {
 
-    this.scope[context.VAR[0].image] = this.visit(context.atomicStatement)
+    this.scope[context.VAR[0].image] = this.visit(context.arithmeticStatement)
   }
 
   assignStatement (context) {
@@ -88,7 +88,7 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   repeatStatement (context) {
 
-    const count = this.visit(context.atomicStatement)
+    const count = this.visit(context.arithmeticStatement)
 
     let step = 0
 
@@ -115,7 +115,7 @@ class TurtleInterpreter extends BaseCstVisitor {
 
     const direction = context.MovementOperator[0].image === `forward` ? 1 : -1
 
-    const length = direction * this.visit(context.atomicStatement)
+    const length = direction * this.visit(context.arithmeticStatement)
 
     const offset = this.turtle.getCoordinatesOffset(length)
 
@@ -126,7 +126,7 @@ class TurtleInterpreter extends BaseCstVisitor {
 
     const direction = context.DirectionOperator[0].image
 
-    const degrees = this.visit(context.atomicStatement)
+    const degrees = this.visit(context.arithmeticStatement)
 
     this.turtle.setHeading(direction, degrees)
   }
@@ -140,8 +140,8 @@ class TurtleInterpreter extends BaseCstVisitor {
 
     this.turtle.setXY({
 
-      x: this.visit(context.atomicStatement[0]),
-      y: this.visit(context.atomicStatement[1])
+      x: this.visit(context.arithmeticStatement[0]),
+      y: this.visit(context.arithmeticStatement[1])
     })
   } 
 
@@ -151,12 +151,38 @@ class TurtleInterpreter extends BaseCstVisitor {
 
     const functionScope = this.scope[context.IDENTIFIER[0].image]
 
-    for (const input of context.atomicStatement) {
+    for (const input of context.arithmeticStatement) {
 
       this.scope[functionScope.inputs[index]] = this.visit(input)
     }
 
     functionScope.fn()
+  }
+
+  arithmeticStatement (context) {
+
+    const lhs = this.visit(context.atomicStatement[0])
+
+    if (!context.atomicStatement[1]) {
+
+      return lhs
+    }
+
+    switch (context.ArithmeticOperator[0].image) {
+
+      case `+`:
+
+        return lhs + this.visit(context.atomicStatement[1])
+      case `-`:
+
+        return lhs - this.visit(context.atomicStatement[1])
+      case `*`:
+
+        return lhs * this.visit(context.atomicStatement[1])
+      case `/`:
+
+        return lhs - this.visit(context.atomicStatement[1])
+    }
   }
 
   atomicStatement (context) {
@@ -188,18 +214,23 @@ if (lexed.errors.length) {
 
   console.log(`Lexer error!`)
 
-  throw new Error(lexed.errors)
+  console.log(lexer.errors)
+
+  throw new Error()
 }
 
 parser.input = lexed.tokens
 
 const cst = parser.program()
 
+
 if (parser.errors.length) {
 
   console.log(`Parser error!`)
 
-  throw new Error(parser.errors)
+  console.log(parser.errors)
+
+  throw new Error()
 }
 
 const interpreter = new TurtleInterpreter()
