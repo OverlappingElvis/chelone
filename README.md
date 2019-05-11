@@ -42,3 +42,7 @@ If you're not familiar with Logo or turtle graphics, check out the Logo Foundati
 
 -   Program flow and control
 -   Additional drawing tools
+
+## Chelone?
+
+In Greek myth, Chelone was a nymph who was turned into a tortoise because she didn't RSVP to Zeus and Hera's wedding.
