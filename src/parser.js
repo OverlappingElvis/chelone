@@ -166,8 +166,18 @@ module.exports = class TurtleParser extends Parser {
         },
         {
           ALT: () => $.CONSUME(Tokens.VAR)
+        },
+        {
+          ALT: () => $.SUBRULE($.randomStatement)
         }
       ])
+    })
+
+    $.RULE(`randomStatement`, () => {
+
+      $.CONSUME(Tokens.Random)
+
+      $.SUBRULE($.atomicStatement)
     })
 
     $.RULE(`blockStatement`, () => {

@@ -141,6 +141,11 @@ createToken({
 })
 
 createToken({
+  name: `Random`,
+  pattern: /random/
+})
+
+createToken({
   name: `INT`,
   pattern: /[0-9]+/
 })

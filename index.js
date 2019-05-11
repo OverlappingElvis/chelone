@@ -196,7 +196,15 @@ class TurtleInterpreter extends BaseCstVisitor {
     } else if (context.INT) {
 
       return parseInt(context.INT[0].image, 10)
+    } else if (context.randomStatement) {
+
+      return this.visit(context.randomStatement)
     }
+  }
+
+  randomStatement (context) {
+
+    return Math.floor(Math.random() * Math.floor(this.visit(context.atomicStatement)))
   }
 
   blockStatement (context) {
