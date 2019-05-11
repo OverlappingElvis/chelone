@@ -28,7 +28,7 @@ If you're not familiar with Logo or turtle graphics, check out the Logo Foundati
 ### Iteration, Procedures, Variables
 
 -   `repeat <count> [<statements>]`
--   `to <procedure> :<input> <statements> end`
+-   `to <procedure> :<inputA> :<inputB> :<inputC> <statements> end`
 -   `make "<variable> <value>`
 
 ### Calculation
