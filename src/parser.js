@@ -36,6 +36,12 @@ module.exports = class TurtleParser extends Parser {
           ALT: () => $.SUBRULE($.directionStatement)
         },
         {
+          ALT: () => $.SUBRULE($.homeStatement)
+        },
+        {
+          ALT: () => $.SUBRULE($.setXYStatement)
+        },
+        {
           ALT: () => $.SUBRULE($.functionStatement)
         }
       ])
@@ -79,6 +85,20 @@ module.exports = class TurtleParser extends Parser {
     $.RULE(`penToggleStatement`, () => {
 
       $.CONSUME(Tokens.PenToggleOperator)
+    })
+
+    $.RULE(`homeStatement`, () => {
+
+      $.CONSUME(Tokens.Home)
+    })
+
+    $.RULE(`setXYStatement`, () => {
+
+      $.CONSUME(Tokens.SetXY)
+
+      $.SUBRULE($.atomicStatement)
+
+      $.SUBRULE2($.atomicStatement)
     })
 
     $.RULE(`movementStatement`, () => {

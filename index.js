@@ -52,6 +52,12 @@ class TurtleInterpreter extends BaseCstVisitor {
     } else if (context.directionStatement) {
 
       this.visit(context.directionStatement)
+    } else if (context.homeStatement) {
+
+      this.visit(context.homeStatement)
+    } else if (context.setXYStatement) {
+
+      this.visit(context.setXYStatement)
     } else if (context.functionStatement) {
 
       this.visit(context.functionStatement)
@@ -117,6 +123,20 @@ class TurtleInterpreter extends BaseCstVisitor {
     this.turtle.setHeading(direction, degrees)
   }
 
+  homeStatement (context) {
+
+    this.turtle.home()
+  }
+
+  setXYStatement (context) {
+
+    this.turtle.setNewCoordinates({
+
+      x: this.visit(context.atomicStatement[0]),
+      y: this.visit(context.atomicStatement[1])
+    })
+  } 
+
   functionStatement (context) {
 
     let index = 0
@@ -154,9 +174,23 @@ class TurtleInterpreter extends BaseCstVisitor {
 
 const lexed = TurtleLexer.tokenize(program.program)
 
+if (lexed.errors.length) {
+
+  console.log(`Lexer error!`)
+
+  throw new Error(lexed.errors)
+}
+
 parser.input = lexed.tokens
 
 const cst = parser.program()
+
+if (parser.errors.length) {
+
+  console.log(`Parser error!`)
+
+  throw new Error(parser.errors)
+}
 
 const interpreter = new TurtleInterpreter()
 

@@ -37,13 +37,13 @@ createToken({
 
 createToken({
   name: `PenUp`,
-  pattern: /penup/,
+  pattern: /penup|pu/,
   categories: Tokens.PenToggleOperator
 })
 
 createToken({
   name: `PenDown`,
-  pattern: /pendown/,
+  pattern: /pendown|pd/,
   categories: Tokens.PenToggleOperator
 })
 
@@ -54,13 +54,13 @@ createToken({
 
 createToken({
   name: `Left`,
-  pattern: /left/,
+  pattern: /left|lt/,
   categories: Tokens.DirectionOperator
 })
 
 createToken({
   name: `Right`,
-  pattern: /right/,
+  pattern: /right|rt/,
   categories: Tokens.DirectionOperator
 })
 
@@ -71,14 +71,24 @@ createToken({
 
 createToken({
   name: `Forward`,
-  pattern: /forward/,
+  pattern: /forward|fd/,
   categories: Tokens.MovementOperator
 })
 
 createToken({
   name: `Back`,
-  pattern: /back/,
+  pattern: /backward|bk/,
   categories: Tokens.MovementOperator
+})
+
+createToken({
+  name: `Home`,
+  pattern: /home/
+})
+
+createToken({
+  name: `SetXY`,
+  pattern: /setxy/
 })
 
 createToken({
