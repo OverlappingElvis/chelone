@@ -26,6 +26,11 @@ createToken({
 })
 
 createToken({
+  name: `Make`,
+  pattern: /make/
+})
+
+createToken({
   name: `End`,
   pattern: /end/
 })
@@ -119,6 +124,11 @@ createToken({
 createToken({
   name: `IDENTIFIER`,
   pattern: /[a-zA-Z]+/
+})
+
+createToken({
+  name: `VAR`,
+  pattern: /"[a-zA-Z]/
 })
 
 module.exports = {

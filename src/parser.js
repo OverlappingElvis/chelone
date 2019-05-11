@@ -24,6 +24,9 @@ module.exports = class TurtleParser extends Parser {
           ALT: () => $.SUBRULE($.assignStatement)
         },
         {
+          ALT: () => $.SUBRULE($.variableStatement)
+        },
+        {
           ALT: () => $.SUBRULE($.repeatStatement)
         },
         {
@@ -67,6 +70,15 @@ module.exports = class TurtleParser extends Parser {
       })
 
       $.CONSUME(Tokens.End)
+    })
+
+    $.RULE(`variableStatement`, () => {
+
+      $.CONSUME(Tokens.Make)
+
+      $.CONSUME(Tokens.VAR)
+
+      $.SUBRULE($.atomicStatement)
     })
 
     $.RULE(`functionStatement`, () => {

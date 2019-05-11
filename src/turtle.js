@@ -12,10 +12,18 @@ module.exports = class Turtle {
 
     this.heading = 90
     this.previousHeading = 90
-    
+
     this.penDown = true
 
     this.segments = []
+  }
+
+  get origin () {
+
+    return {
+      x: this.bounds.x / 2,
+      y: this.bounds.y / 2 
+    }
   }
 
   render () {
@@ -23,16 +31,19 @@ module.exports = class Turtle {
     return [`<svg viewBox="0 0 ${this.bounds.x} ${this.bounds.y}" xmlns="http://www.w3.org/2000/svg">`, ...this.segments, `</svg>`].join(``)
   }
 
-  // Reset turtle position, but don't change pen or segments state
+  // Reset turtle position and direction, but don't change pen state or direction
   home () {
 
-    this.setNewCoordinates({
-      x: this.bounds.x / 2,
-      y: this.bounds.y / 2
-    })
+    this.setNewCoordinates(this.origin)
+  }
 
-    this.heading = 90
-    this.previousHeading = 90
+  // Set new coordinates relative to origin, but don't change pen state or direction
+  setXY ({ x, y }) {
+
+    this.setNewCoordinates({
+      x: this.origin.x + x,
+      y: this.origin.y + y
+    })
   }
 
   setNewCoordinates ({ x, y }) {
@@ -90,5 +101,13 @@ module.exports = class Turtle {
     const newAngle = this.heading + (sign * degrees)
 
     this.heading = this.normalizeHeading(newAngle)
+  }
+
+  setAbsoluteHeading(degrees) {
+
+    const newHeading = this.normalizeHeading(degrees)
+
+    this.previousHeading = newHeading
+    this.heading = newHeading
   }
 }

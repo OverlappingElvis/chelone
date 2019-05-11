@@ -37,7 +37,10 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   statement (context) {
 
-    if (context.assignStatement) {
+    if (context.variableStatement) {
+
+      this.visit(context.variableStatement)
+    } else if (context.assignStatement) {
 
       this.visit(context.assignStatement)
     } else if (context.repeatStatement) {
@@ -62,6 +65,11 @@ class TurtleInterpreter extends BaseCstVisitor {
 
       this.visit(context.functionStatement)
     }
+  }
+
+  variableStatement (context) {
+
+    this.scope[context.VAR[0].image] = this.visit(context.atomicStatement)
   }
 
   assignStatement (context) {
@@ -130,7 +138,7 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   setXYStatement (context) {
 
-    this.turtle.setNewCoordinates({
+    this.turtle.setXY({
 
       x: this.visit(context.atomicStatement[0]),
       y: this.visit(context.atomicStatement[1])
@@ -156,11 +164,13 @@ class TurtleInterpreter extends BaseCstVisitor {
     if (context.INPUT) {
 
       return this.scope[context.INPUT[0].image]
+    } else if (context.VAR) {
+
+      return this.scope[context.VAR[0].image]
     } else if (context.INT) {
 
       return parseInt(context.INT[0].image, 10)
     }
-
   }
 
   blockStatement (context) {
