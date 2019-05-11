@@ -141,6 +141,45 @@ createToken({
 })
 
 createToken({
+  name: `If`,
+  pattern: /if/
+})
+
+createToken({
+  name: `ComparisonOperator`,
+  pattern: Lexer.NA
+})
+
+createToken({
+  name: `Equals`,
+  pattern: /=/,
+  categories: Tokens.ComparisonOperator
+})
+
+createToken({
+  name: `NotEquals`,
+  pattern: /!=/,
+  categories: Tokens.ComparisonOperator
+})
+
+createToken({
+  name: `GreaterThan`,
+  pattern: />/,
+  categories: Tokens.ComparisonOperator
+})
+
+createToken({
+  name: `LessThan`,
+  pattern: /</,
+  categories: Tokens.ComparisonOperator
+})
+
+createToken({
+  name: `Stop`,
+  pattern: /stop/
+})
+
+createToken({
   name: `Random`,
   pattern: /random/
 })

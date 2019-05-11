@@ -46,6 +46,12 @@ module.exports = class TurtleParser extends Parser {
         },
         {
           ALT: () => $.SUBRULE($.functionStatement)
+        },
+        {
+          ALT: () => $.SUBRULE($.conditionalStatement)
+        },
+        {
+          ALT: () => $.SUBRULE($.stopStatement)
         }
       ])
     })
@@ -79,6 +85,24 @@ module.exports = class TurtleParser extends Parser {
       $.CONSUME(Tokens.VAR)
 
       $.SUBRULE($.arithmeticStatement)
+    })
+
+    $.RULE(`conditionalStatement`, () => {
+
+      $.CONSUME(Tokens.If)
+
+      $.SUBRULE($.arithmeticStatement)
+
+      $.CONSUME(Tokens.ComparisonOperator)
+
+      $.SUBRULE2($.arithmeticStatement)
+
+      $.SUBRULE($.blockStatement)
+    })
+
+    $.RULE(`stopStatement`, () => {
+
+      $.CONSUME(Tokens.Stop)
     })
 
     $.RULE(`functionStatement`, () => {

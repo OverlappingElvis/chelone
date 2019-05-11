@@ -86,6 +86,14 @@ class TurtleInterpreter extends BaseCstVisitor {
     }
   }
 
+  conditionalStatement (context) {
+
+  }
+
+  stopStatement (context) {
+
+  }
+
   repeatStatement (context) {
 
     const count = this.visit(context.arithmeticStatement)
@@ -94,7 +102,10 @@ class TurtleInterpreter extends BaseCstVisitor {
 
     while (step < count) {
 
-      this.visit(context.blockStatement)
+      for (const statement of context.blockStatement[0].children.statement) {
+
+        this.visit(context.blockStatement)
+      }
 
       step++
     }
