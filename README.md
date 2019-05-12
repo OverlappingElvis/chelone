@@ -9,7 +9,7 @@ This is *not* a full implementation of Logo, but is generally compatible with it
 ## Usage
 
 -   `npm install`
--   Example: `npm run turtle -- -P "repeat 4 [forward 100 right 90] -O output.svg"`
+-   Example: `npm run turtle -- -P 'make "length 100 to square :length repeat 4 [forward :length right 90] end square "length * 2' -O output.svg`
     -   If run without options (`npm run turtle`), will output a demo image to `turtle.svg`
 
 ## Implemented Commands
