@@ -33,6 +33,12 @@ If you're not familiar with Logo or turtle graphics, check out the Logo Foundati
 -   `to <procedure> :<inputA> :<inputB> :<inputC> <statements> end`
 -   `make "<variable> <value>`
 
+### Conditionals and Flow Control
+
+-   `if <valueA> = <valueB> [<statements>]`
+    -   `=`, `!=`, `>`, `<`
+-   `stop` (in a `repeat` or `procedure`) 
+
 ### Calculation
 
 -   `+`, `-`, `*`, `/` (one operation per statement, no precedence or grouping)
@@ -40,8 +46,8 @@ If you're not familiar with Logo or turtle graphics, check out the Logo Foundati
 
 ### To Implement
 
--   Program flow and control
 -   Additional drawing tools
+-   Module API
 
 ## Chelone?
 
