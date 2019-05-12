@@ -46,6 +46,7 @@ If you're not familiar with Logo or turtle graphics, check out the Logo Foundati
 
 ### To Implement
 
+-   Procedure outputs
 -   Additional drawing tools
 -   Module API
 
