@@ -162,8 +162,6 @@ class TurtleInterpreter extends BaseCstVisitor {
         }
     }
 
-    console.log(`entering conditional block statement!`)
-
     return this.visit(context.blockStatement)
   }
 
@@ -354,5 +352,5 @@ interpreter.visit(cst)
 
 fs.writeFile(program.output, interpreter.turtle.render(), () => {
 
-  console.log(`saved image to ${program.output}`)
+  console.log(`Saved image to ${program.output}`)
 })
