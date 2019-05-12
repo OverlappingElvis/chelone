@@ -249,7 +249,7 @@ class TurtleInterpreter extends BaseCstVisitor {
 
     for (const input of context.arithmeticStatement) {
 
-      this.scope[functionScope.inputs[index]] = this.visit(input)
+      this.scope[functionScope.inputs[index]] = this.visit(input, this.scope[context.IDENTIFIER[0].image])
     }
 
     functionScope.fn()
@@ -293,9 +293,11 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   atomicStatement (context) {
 
-    if (context.INT) {
+    if (context.NUMBER) {
 
-      return parseInt(context.INT[0].image, 10)
+      console.log(parseFloat(context.NUMBER[0].image))
+
+      return parseFloat(context.NUMBER[0].image)
     } else if (context.INPUT) {
 
       return this.scope[context.INPUT[0].image]

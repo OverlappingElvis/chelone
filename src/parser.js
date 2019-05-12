@@ -193,7 +193,7 @@ module.exports = class TurtleParser extends Parser {
 
       $.OR([
         {
-          ALT: () => $.CONSUME(Tokens.INT)
+          ALT: () => $.CONSUME(Tokens.NUMBER)
         },
         {
           ALT: () => $.CONSUME(Tokens.INPUT)

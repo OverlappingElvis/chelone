@@ -46,7 +46,9 @@ If you're not familiar with Logo or turtle graphics, check out the Logo Foundati
 
 ### To Implement
 
+-   Recursion
 -   Procedure outputs
+-   Scoped procedure inputs
 -   Additional drawing tools
 -   Module API
 

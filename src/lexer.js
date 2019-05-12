@@ -185,8 +185,8 @@ createToken({
 })
 
 createToken({
-  name: `INT`,
-  pattern: /[0-9]+/
+  name: `NUMBER`,
+  pattern: /[0-9]+(\.[0-9]+)?/
 })
 
 createToken({
