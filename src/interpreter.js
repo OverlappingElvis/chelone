@@ -6,7 +6,7 @@ const TurtleParser = require(`./parser`)
 const Turtle = require(`./turtle`)
 
 program.version(`0.0.1`)
-  .option(`-P --program [program]`, `Turtle program as quoted string`, `make "length 250 to growsquare :length repeat 4 [forward :length right 90] make "length :length + 50 end repeat 10 [growsquare "length right 36]`)
+  .option(`-P --program [program]`, `Turtle program as quoted string`, `make "length 50 to growsquare :length repeat 4 [forward :length right 90] make "length :length + 50 end repeat 10 [growsquare "length right 36 if "length > 250 [make "length 50]]`)
   .option(`-O --output [filename]`, `Output filename [turtle.svg]`, `turtle.svg`)
   .parse(process.argv)
 
@@ -24,6 +24,10 @@ class TurtleInterpreter extends BaseCstVisitor {
 
     this.scope = {}
 
+    this.constants = {
+      STOP: Symbol(`STOP`)
+    }
+
     this.validateVisitor()
   }
 
@@ -39,31 +43,57 @@ class TurtleInterpreter extends BaseCstVisitor {
 
     if (context.variableStatement) {
 
-      this.visit(context.variableStatement)
-    } else if (context.assignStatement) {
+      return this.visit(context.variableStatement)
+    }
 
-      this.visit(context.assignStatement)
-    } else if (context.repeatStatement) {
+    if (context.assignStatement) {
 
-      this.visit(context.repeatStatement)
-    } else if (context.penToggleStatement) {
+      return this.visit(context.assignStatement)
+    }
 
-      this.visit(context.penToggleStatement)
-    } else if (context.movementStatement) {
+    if (context.repeatStatement) {
 
-      this.visit(context.movementStatement)
-    } else if (context.directionStatement) {
+      return this.visit(context.repeatStatement)
+    }
 
-      this.visit(context.directionStatement)
-    } else if (context.homeStatement) {
+    if (context.penToggleStatement) {
 
-      this.visit(context.homeStatement)
-    } else if (context.setXYStatement) {
+      return this.visit(context.penToggleStatement)
+    }
 
-      this.visit(context.setXYStatement)
-    } else if (context.functionStatement) {
+    if (context.movementStatement) {
 
-      this.visit(context.functionStatement)
+      return this.visit(context.movementStatement)
+    }
+
+    if (context.directionStatement) {
+
+      return this.visit(context.directionStatement)
+    }
+
+    if (context.homeStatement) {
+
+      return this.visit(context.homeStatement)
+    }
+
+    if (context.setXYStatement) {
+
+      return this.visit(context.setXYStatement)
+    }
+
+    if (context.functionStatement) {
+
+      return this.visit(context.functionStatement)
+    }
+
+    if (context.conditionalStatement) {
+
+      return this.visit(context.conditionalStatement)
+    }
+
+    if (context.stopStatement) {
+
+      return this.visit(context.stopStatement)
     }
   }
 
@@ -79,7 +109,12 @@ class TurtleInterpreter extends BaseCstVisitor {
 
         for (const statement of context.statement) {
 
-          this.visit(statement)
+          const result = this.visit(statement)
+
+          if (result === this.constants.STOP) {
+
+            return
+          }
         }
       },
       inputs: context.INPUT.map(({ image }) => image)
@@ -88,10 +123,53 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   conditionalStatement (context) {
 
+    const lhs = this.visit(context.arithmeticStatement[0])
+    const rhs = this.visit(context.arithmeticStatement[1])
+
+    const operator = context.ComparisonOperator[0].image
+
+    switch (operator) {
+
+      case `=`:
+
+        if (lhs !== rhs) {
+
+          return
+        }
+
+        break
+      case `!=`:
+
+        if (lhs === rhs) {
+
+          return
+        }
+
+        break
+      case `>`:
+
+        if (lhs <= rhs) {
+
+          return
+        }
+
+        break
+      case `<`:
+
+        if (lhs >= rhs) {
+
+          return
+        }
+    }
+
+    console.log(`entering conditional block statement!`)
+
+    return this.visit(context.blockStatement)
   }
 
   stopStatement (context) {
 
+    return this.constants.STOP
   }
 
   repeatStatement (context) {
@@ -100,11 +178,20 @@ class TurtleInterpreter extends BaseCstVisitor {
 
     let step = 0
 
-    while (step < count) {
+    let stopped = false
+
+    while (step < count && !stopped) {
 
       for (const statement of context.blockStatement[0].children.statement) {
 
-        this.visit(context.blockStatement)
+        const result = this.visit(statement)
+
+        if (result === this.constants.STOP) {
+
+          stopped = true
+
+          break
+        }
       }
 
       step++
@@ -232,7 +319,7 @@ class TurtleInterpreter extends BaseCstVisitor {
 
     for (const statement of context.statement) {
 
-      this.visit(statement)
+      return this.visit(statement)
     }
   }
 }
