@@ -209,7 +209,7 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   movementStatement (context) {
 
-    const direction = context.MovementOperator[0].image === `forward` ? -1 : 1
+    const direction = context.MovementOperator[0].image === `forward` ? 1 : -1
 
     const length = direction * this.visit(context.arithmeticStatement)
 
