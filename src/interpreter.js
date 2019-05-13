@@ -117,7 +117,7 @@ class TurtleInterpreter extends BaseCstVisitor {
           }
         }
       },
-      inputs: context.INPUT.map(({ image }) => image)
+      inputs: context.INPUT ? context.INPUT.map(({ image }) => image) : []
     }
   }
 
@@ -209,13 +209,7 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   movementStatement (context) {
 
-    const direction = context.MovementOperator[0].image === `forward` ? 1 : -1
-
-    const length = direction * this.visit(context.arithmeticStatement)
-
-    const offset = this.turtle.getCoordinatesOffset(length)
-
-    this.turtle.setNewCoordinates(offset)
+    this.turtle.move(context.MovementOperator[0].image, this.visit(context.arithmeticStatement))
   }
 
   directionStatement (context) {
@@ -247,10 +241,14 @@ class TurtleInterpreter extends BaseCstVisitor {
 
     const functionScope = this.scope[context.IDENTIFIER[0].image]
 
-    for (const input of context.arithmeticStatement) {
+    if (context.arithmeticStatement) {
+      
+      for (const input of context.arithmeticStatement) {
 
-      this.scope[functionScope.inputs[index]] = this.visit(input, this.scope[context.IDENTIFIER[0].image])
+        this.scope[functionScope.inputs[index]] = this.visit(input, this.scope[context.IDENTIFIER[0].image])
+      }
     }
+
 
     functionScope.fn()
   }

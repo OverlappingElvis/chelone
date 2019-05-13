@@ -31,6 +31,17 @@ module.exports = class Turtle {
     return [`<svg viewBox="0 0 ${this.bounds.x} ${this.bounds.y}" xmlns="http://www.w3.org/2000/svg">`, ...this.segments, `</svg>`].join(``)
   }
 
+  move (direction, length) {
+
+    console.log(`moving ${direction} ${length}`)
+
+    const sign = direction === `forward` ? -1 : 1
+
+    const offset = this.getCoordinatesOffset(sign * length)
+
+    this.setNewCoordinates(offset)
+  }
+
   // Reset turtle position and direction, but don't change pen state or direction
   home () {
 
