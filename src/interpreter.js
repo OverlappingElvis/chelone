@@ -209,7 +209,7 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   movementStatement (context) {
 
-    const direction = context.MovementOperator[0].image === `forward` ? 1 : -1
+    const direction = context.MovementOperator[0].image === `forward` ? -1 : 1
 
     const length = direction * this.visit(context.arithmeticStatement)
 
@@ -294,8 +294,6 @@ class TurtleInterpreter extends BaseCstVisitor {
   atomicStatement (context) {
 
     if (context.NUMBER) {
-
-      console.log(parseFloat(context.NUMBER[0].image))
 
       return parseFloat(context.NUMBER[0].image)
     } else if (context.INPUT) {

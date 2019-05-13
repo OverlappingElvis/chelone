@@ -96,7 +96,7 @@ module.exports = class Turtle {
 
     this.previousHeading = this.heading
 
-    const sign = direction === `left` ? 1 : -1
+    const sign = direction === `left` ? -1 : 1
 
     const newAngle = this.heading + (sign * degrees)
 
