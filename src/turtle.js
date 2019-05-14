@@ -33,8 +33,6 @@ module.exports = class Turtle {
 
   move (direction, length) {
 
-    console.log(`moving ${direction} ${length}`)
-
     const sign = direction === `forward` ? -1 : 1
 
     const offset = this.getCoordinatesOffset(sign * length)
