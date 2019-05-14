@@ -25,7 +25,7 @@ If you're not familiar with Logo or turtle graphics, check out the Logo Foundati
 -   `right <degrees>` (alias `rt`)
 -   `left <degrees>` (alias `lt`)
 -   `home`
--   `setxy <x> <y>` (relative to the origin)
+-   ~`setxy <x> <y>` (relative to the origin)~
 
 ### Iteration, Procedures, Variables
 
@@ -46,7 +46,6 @@ If you're not familiar with Logo or turtle graphics, check out the Logo Foundati
 
 ### To Implement
 
--   Recursion
 -   Procedure outputs
 -   Scoped procedure inputs
 -   Additional drawing tools
