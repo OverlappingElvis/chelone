@@ -24,7 +24,7 @@ If you're not familiar with Logo or turtle graphics, check out the Logo Foundati
 -   `backward <amount>` (alias `bk`)
 -   `right <degrees>` (alias `rt`)
 -   `left <degrees>` (alias `lt`)
--   `home`
+-   ~`home`~
 -   ~`setxy <x> <y>` (relative to the origin)~
 
 ### Iteration, Procedures, Variables
