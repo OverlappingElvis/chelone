@@ -7,8 +7,8 @@ module.exports = class Turtle {
       y: 1000
     }
 
-    this.x = this.bounds.x / 2
-    this.y = this.bounds.y / 2
+    this.x = 500
+    this.y = 500
 
     this.heading = 90
     this.previousHeading = 90
@@ -21,8 +21,8 @@ module.exports = class Turtle {
   get origin () {
 
     return {
-      x: this.bounds.x / 2,
-      y: this.bounds.y / 2 
+      x: 500,
+      y: 500
     }
   }
 
@@ -43,7 +43,7 @@ module.exports = class Turtle {
   // Reset turtle position and direction, but don't change pen state or direction
   home () {
 
-    this.setNewCoordinates(this.origin)
+    this.setNewCoordinates(this.origin, true)
   }
 
   // Set new coordinates relative to origin, but don't change pen state or direction
@@ -52,16 +52,16 @@ module.exports = class Turtle {
     this.setNewCoordinates({
       x: this.origin.x + x,
       y: this.origin.y + y
-    })
+    }, true)
   }
 
-  setNewCoordinates ({ x, y }) {
+  setNewCoordinates ({ x, y }, absolute) {
 
     const oldX = this.x
-    const newX = this.x + x
+    const newX = absolute ? x : this.x + x
 
     const oldY = this.y
-    const newY = this.y + y
+    const newY = absolute ? y : this.y + y
 
     if (this.penDown === true) {
 
