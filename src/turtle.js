@@ -33,7 +33,7 @@ module.exports = class Turtle {
 
   move (direction, length) {
 
-    const sign = direction === `forward` ? -1 : 1
+    const sign = [`forward`, `fd`].includes(direction) ? -1 : 1
 
     const offset = this.getCoordinatesOffset(sign * length)
 
@@ -105,7 +105,7 @@ module.exports = class Turtle {
 
     this.previousHeading = this.heading
 
-    const sign = direction === `left` ? -1 : 1
+    const sign = [`left`, `lt`].includes(direction) ? -1 : 1
 
     const newAngle = this.heading + (sign * degrees)
 
