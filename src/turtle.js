@@ -46,6 +46,16 @@ module.exports = class Turtle {
     this.setNewCoordinates(this.origin, true)
   }
 
+  penDown () {
+
+    this.penDown = true
+  }
+
+  penUp () {
+
+    this.penDown = false
+  }
+
   // Set new coordinates relative to origin, but don't change pen state or direction
   setXY ({ x, y }) {
 

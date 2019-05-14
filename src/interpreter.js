@@ -198,12 +198,12 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   penToggleStatement (context) {
 
-    if (context.PenToggleOperator[0].image === `penup`) {
+    if ([`penup`, `pu`].includes(context.PenToggleOperator[0].image)) {
 
-      this.turtle.penDown = false
+      this.turtle.penUp()
     } else {
 
-      this.turtle.penDown = true
+      this.turtle.penDown()
     }
   }
 
