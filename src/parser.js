@@ -167,25 +167,15 @@ module.exports = class TurtleParser extends Parser {
       ])
     })
 
-    $.RULE(`minusStatement`, () => {
-
-      $.OPTION(() => {
-
-        $.CONSUME(Tokens.Minus)
-      })
-
-      $.SUBRULE($.atomicStatement)
-    })
-
     $.RULE(`arithmeticStatement`, () => {
 
-      $.SUBRULE($.minusStatement)
+      $.SUBRULE($.atomicStatement)
 
       $.OPTION(() => {
 
         $.CONSUME(Tokens.ArithmeticOperator)
 
-        $.SUBRULE2($.minusStatement)
+        $.SUBRULE2($.atomicStatement)
       })
     })
 
@@ -211,7 +201,7 @@ module.exports = class TurtleParser extends Parser {
 
       $.CONSUME(Tokens.Random)
 
-      $.SUBRULE($.minusStatement)
+      $.SUBRULE($.atomicStatement)
     })
 
     $.RULE(`blockStatement`, () => {

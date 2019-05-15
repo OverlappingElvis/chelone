@@ -255,9 +255,9 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   arithmeticStatement (context) {
 
-    const lhs = this.visit(context.minusStatement[0])
+    const lhs = this.visit(context.atomicStatement[0])
 
-    if (!context.minusStatement[1]) {
+    if (!context.atomicStatement[1]) {
 
       return lhs
     }
@@ -266,27 +266,17 @@ class TurtleInterpreter extends BaseCstVisitor {
 
       case `+`:
 
-        return lhs + this.visit(context.minusStatement[1])
+        return lhs + this.visit(context.atomicStatement[1])
       case `-`:
 
-        return lhs - this.visit(context.minusStatement[1])
+        return lhs - this.visit(context.atomicStatement[1])
       case `*`:
 
-        return lhs * this.visit(context.minusStatement[1])
+        return lhs * this.visit(context.atomicStatement[1])
       case `/`:
 
-        return lhs - this.visit(context.minusStatement[1])
+        return lhs - this.visit(context.atomicStatement[1])
     }
-  }
-
-  minusStatement (context) {
-
-    if (context.Minus) {
-
-      return -1 * this.visit(context.atomicStatement)
-    }
-
-    return this.visit(context.atomicStatement)
   }
 
   atomicStatement (context) {
@@ -308,7 +298,7 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   randomStatement (context) {
 
-    return Math.floor(Math.random() * Math.floor(this.visit(context.minusStatement)))
+    return Math.floor(Math.random() * Math.floor(this.visit(context.atomicStatement)))
   }
 
   blockStatement (context) {
