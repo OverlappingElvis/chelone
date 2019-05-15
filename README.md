@@ -44,8 +44,9 @@ If you're not familiar with Logo or turtle graphics, check out the Logo Foundati
 -   `+`, `-`, `*`, `/` (one operation per statement, no precedence or grouping)
 -   `random <max>` (random integer from 0 to max exclusive)
 
-### To Implement
+### Bugs/To Implement
 
+-   Proper unary minus
 -   Procedure outputs
 -   Scoped procedure inputs
 -   Additional drawing tools
