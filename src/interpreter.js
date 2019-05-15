@@ -275,7 +275,7 @@ class TurtleInterpreter extends BaseCstVisitor {
         return lhs * this.visit(context.atomicStatement[1])
       case `/`:
 
-        return lhs - this.visit(context.atomicStatement[1])
+        return lhs / this.visit(context.atomicStatement[1])
     }
   }
 
