@@ -47,6 +47,7 @@ If you're not familiar with Logo or turtle graphics, check out the Logo Foundati
 ### Bugs/To Implement
 
 -   Proper unary minus
+-   Better recursion (tail recursion?)
 -   Procedure outputs
 -   Scoped procedure inputs
 -   Additional drawing tools
