@@ -13,7 +13,7 @@ module.exports = class Turtle {
     this.heading = 90
     this.previousHeading = 90
 
-    this.penDown = true
+    this._penDown = true
 
     this.segments = []
   }
@@ -48,12 +48,12 @@ module.exports = class Turtle {
 
   penDown () {
 
-    this.penDown = true
+    this._penDown = true
   }
 
   penUp () {
 
-    this.penDown = false
+    this._penDown = false
   }
 
   // Set new coordinates relative to origin, but don't change pen state or direction
@@ -73,7 +73,7 @@ module.exports = class Turtle {
     const oldY = this.y
     const newY = absolute ? y : this.y + y
 
-    if (this.penDown === true) {
+    if (this._penDown === true) {
 
       this.segments.push(`<line x1="${oldX.toFixed(0)}" y1="${oldY.toFixed(0)}" x2="${newX.toFixed(0)}" y2="${newY.toFixed(0)}" stroke="black" />`)
     }
