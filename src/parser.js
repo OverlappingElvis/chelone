@@ -91,11 +91,15 @@ module.exports = class TurtleParser extends Parser {
 
       $.CONSUME(Tokens.If)
 
-      $.SUBRULE($.additionStatement)
+      $.SUBRULE($.additionStatement, {
+        LABEL: `lhs`
+      })
 
       $.CONSUME(Tokens.ComparisonOperator)
 
-      $.SUBRULE2($.additionStatement)
+      $.SUBRULE2($.additionStatement, {
+        LABEL: `rhs`
+      })
 
       $.SUBRULE($.blockStatement)
     })
@@ -132,9 +136,13 @@ module.exports = class TurtleParser extends Parser {
 
       $.CONSUME(Tokens.SetXY)
 
-      $.SUBRULE($.additionStatement)
+      $.SUBRULE($.additionStatement, {
+        LABEL: `x`
+      })
 
-      $.SUBRULE2($.additionStatement)
+      $.SUBRULE2($.additionStatement, {
+        LABEL: `y`
+      })
     })
 
     $.RULE(`movementStatement`, () => {
@@ -155,7 +163,9 @@ module.exports = class TurtleParser extends Parser {
 
       $.CONSUME(Tokens.Repeat)
 
-      $.SUBRULE($.additionStatement)
+      $.SUBRULE($.additionStatement, {
+        LABEL: `count`
+      })
 
       $.OR([
         {
@@ -233,7 +243,7 @@ module.exports = class TurtleParser extends Parser {
 
       $.CONSUME(Tokens.Random)
 
-      $.SUBRULE($.atomicStatement)
+      $.SUBRULE($.additionStatement)
     })
 
     $.RULE(`blockStatement`, () => {

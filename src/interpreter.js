@@ -123,8 +123,8 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   conditionalStatement (context) {
 
-    const lhs = this.visit(context.additionStatement[0])
-    const rhs = this.visit(context.additionStatement[1])
+    const lhs = this.visit(context.lhs)
+    const rhs = this.visit(context.rhs)
 
     const operator = context.ComparisonOperator[0].image
 
@@ -172,7 +172,7 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   repeatStatement (context) {
 
-    const count = this.visit(context.additionStatement)
+    const count = this.visit(context.count)
 
     let step = 0
 
@@ -230,8 +230,8 @@ class TurtleInterpreter extends BaseCstVisitor {
 
     this.turtle.setXY({
 
-      x: this.visit(context.additionStatement[0]),
-      y: this.visit(context.additionStatement[1])
+      x: this.visit(context.x),
+      y: this.visit(context.y)
     })
   }
 
@@ -338,7 +338,7 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   randomStatement (context) {
 
-    return Math.floor(Math.random() * Math.floor(this.visit(context.atomicStatement)))
+    return Math.floor(Math.random() * Math.floor(this.visit(context.additionStatement)))
   }
 
   blockStatement (context) {
