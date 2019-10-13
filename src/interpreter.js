@@ -206,7 +206,7 @@ class TurtleInterpreter extends BaseCstVisitor {
 
         const result = this.visit(statement)
 
-        if (result[this.constants.STOP]) {
+        if (result && result[this.constants.STOP]) {
 
           stopped = true
 
