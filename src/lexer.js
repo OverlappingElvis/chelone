@@ -197,6 +197,11 @@ createToken({
 })
 
 createToken({
+  name: `Output`,
+  pattern: /output/
+})
+
+createToken({
   name: `Random`,
   pattern: /random/
 })

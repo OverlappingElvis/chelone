@@ -97,6 +97,16 @@ class TurtleInterpreter extends BaseCstVisitor {
 
       return this.visit(context.stopStatement)
     }
+
+    if (context.outputStatement) {
+
+      return this.visit(context.outputStatement)
+    }
+  }
+
+  innerStatement (context) {
+
+    return this.statement(context)
   }
 
   variableStatement (context) {
@@ -109,13 +119,13 @@ class TurtleInterpreter extends BaseCstVisitor {
     this.scope[context.IDENTIFIER[0].image] = {
       fn: () => {
 
-        for (const statement of context.statement) {
+        for (const statement of context.innerStatement) {
 
           const result = this.visit(statement)
 
-          if (result === this.constants.STOP) {
+          if (result && result[this.constants.STOP]) {
 
-            return
+            return result.value
           }
         }
       },
@@ -169,7 +179,17 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   stopStatement (context) {
 
-    return this.constants.STOP
+    return {
+      [this.constants.STOP]: true
+    }
+  }
+
+  outputStatement (context) {
+
+    return {
+      [this.constants.STOP]: true,
+      value: this.visit(context.additionStatement)
+    }
   }
 
   repeatStatement (context) {
@@ -182,11 +202,11 @@ class TurtleInterpreter extends BaseCstVisitor {
 
     while (step < count && !stopped) {
 
-      for (const statement of context.blockStatement[0].children.statement) {
+      for (const statement of context.blockStatement[0].children.innerStatement) {
 
         const result = this.visit(statement)
 
-        if (result === this.constants.STOP) {
+        if (result[this.constants.STOP]) {
 
           stopped = true
 
@@ -250,7 +270,6 @@ class TurtleInterpreter extends BaseCstVisitor {
         this.scope[functionScope.inputs[index]] = this.visit(input, this.scope[context.IDENTIFIER[0].image])
       }
     }
-
 
     return functionScope.fn()
   }
@@ -358,7 +377,7 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   blockStatement (context) {
 
-    for (const statement of context.statement) {
+    for (const statement of context.innerStatement) {
 
       return this.visit(statement)
     }

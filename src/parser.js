@@ -49,9 +49,45 @@ module.exports = class TurtleParser extends Parser {
         },
         {
           ALT: () => $.SUBRULE($.conditionalStatement)
+        }
+      ])
+    })
+
+    $.RULE(`innerStatement`, () => {
+
+      $.OR([
+        {
+          ALT: () => $.SUBRULE($.variableStatement)
+        },
+        {
+          ALT: () => $.SUBRULE($.repeatStatement)
+        },
+        {
+          ALT: () => $.SUBRULE($.penToggleStatement)
+        },
+        {
+          ALT: () => $.SUBRULE($.movementStatement)
+        },
+        {
+          ALT: () => $.SUBRULE($.directionStatement)
+        },
+        {
+          ALT: () => $.SUBRULE($.homeStatement)
+        },
+        {
+          ALT: () => $.SUBRULE($.setXYStatement)
+        },
+        {
+          ALT: () => $.SUBRULE($.functionStatement)
+        },
+        {
+          ALT: () => $.SUBRULE($.conditionalStatement)
         },
         {
           ALT: () => $.SUBRULE($.stopStatement)
+        },
+        {
+          ALT: () => $.SUBRULE($.outputStatement)
         }
       ])
     })
@@ -72,7 +108,7 @@ module.exports = class TurtleParser extends Parser {
 
       $.MANY2(() => {
 
-        $.SUBRULE($.statement)
+        $.SUBRULE($.innerStatement)
       })
 
       $.CONSUME(Tokens.End)
@@ -107,6 +143,13 @@ module.exports = class TurtleParser extends Parser {
     $.RULE(`stopStatement`, () => {
 
       $.CONSUME(Tokens.Stop)
+    })
+
+    $.RULE(`outputStatement`, () => {
+
+      $.CONSUME(Tokens.Output)
+
+      $.SUBRULE($.additionStatement)
     })
 
     $.RULE(`functionStatement`, () => {
@@ -226,6 +269,9 @@ module.exports = class TurtleParser extends Parser {
         },
         {
           ALT: () => $.SUBRULE($.randomStatement)
+        },
+        {
+          ALT: () => $.SUBRULE($.functionStatement)
         }
       ])
     })
@@ -252,7 +298,7 @@ module.exports = class TurtleParser extends Parser {
 
       $.MANY(() => {
 
-        $.SUBRULE($.statement)
+        $.SUBRULE($.innerStatement)
       })
 
       $.CONSUME(Tokens.RightBracket)
