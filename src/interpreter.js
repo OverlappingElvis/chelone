@@ -37,6 +37,8 @@ class TurtleInterpreter extends BaseCstVisitor {
 
       this.visit(statement)
     }
+
+    return this.turtle.render()
   }
 
   statement (context) {
@@ -250,7 +252,7 @@ class TurtleInterpreter extends BaseCstVisitor {
     }
 
 
-    functionScope.fn()
+    return functionScope.fn()
   }
 
   additionStatement (context) {
@@ -316,18 +318,31 @@ class TurtleInterpreter extends BaseCstVisitor {
     if (context.parenthesisStatement) {
 
       return this.visit(context.parenthesisStatement)
-    } else if (context.NUMBER) {
+    }
+
+    if (context.NUMBER) {
 
       return parseFloat(context.NUMBER[0].image)
-    } else if (context.INPUT) {
+    }
+
+    if (context.INPUT) {
 
       return this.scope[context.INPUT[0].image]
-    } else if (context.VAR) {
+    }
+
+    if (context.VAR) {
 
       return this.scope[context.VAR[0].image]
-    } else  if (context.randomStatement) {
+    }
+
+    if (context.randomStatement) {
 
       return this.visit(context.randomStatement)
+    }
+
+    if (context.functionStatement) {
+
+      return this.visit(context.functionStatement)
     }
   }
 
@@ -350,35 +365,27 @@ class TurtleInterpreter extends BaseCstVisitor {
   }
 }
 
-const lexed = TurtleLexer.tokenize(program.program)
+module.exports = {
+  parse: (input) => {
 
-if (lexed.errors.length) {
+    const lexed = TurtleLexer.tokenize(input)
 
-  console.log(`Lexer error!`)
+    if (lexed.errors.length) {
 
-  console.log(lexed.errors)
+      throw new Error(lexed.errors)
+    }
 
-  throw new Error()
+    parser.input = lexed.tokens
+
+    const cst = parser.program()
+
+    if (parser.errors.length) {
+
+      throw new Error(parser.errors)
+    }
+
+    const interpreter = new TurtleInterpreter()
+
+    return interpreter.visit(cst)
+  }
 }
-
-parser.input = lexed.tokens
-
-const cst = parser.program()
-
-if (parser.errors.length) {
-
-  console.log(`Parser error!`)
-
-  console.log(parser.errors)
-
-  throw new Error()
-}
-
-const interpreter = new TurtleInterpreter()
-
-interpreter.visit(cst)
-
-fs.writeFile(program.output, interpreter.turtle.render(), () => {
-
-  console.log(`Saved image to ${program.output}`)
-})
