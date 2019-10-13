@@ -6,7 +6,7 @@ const TurtleParser = require(`./parser`)
 const Turtle = require(`./turtle`)
 
 program.version(`0.0.1`)
-  .option(`-P --program [program]`, `Turtle program as quoted string`, `make "length 50 to growsquare :length repeat 4 [forward :length right 90] make "length :length + 50 end repeat 10 [growsquare "length right 36 if "length > 250 [make "length 50]]`)
+  .option(`-P --program [program]`, `Turtle program as quoted string`, `to knack :length repeat 6 [forward :length right 90 forward :length * 0.6 right 90 forward :length left 120] end penup setxy 0-50 0-150 pendown knack 200`)
   .option(`-O --output [filename]`, `Output filename [turtle.svg]`, `turtle.svg`)
   .parse(process.argv)
 
@@ -99,7 +99,7 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   variableStatement (context) {
 
-    this.scope[context.VAR[0].image] = this.visit(context.arithmeticStatement)
+    this.scope[context.VAR[0].image] = this.visit(context.additionStatement)
   }
 
   assignStatement (context) {
@@ -123,8 +123,8 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   conditionalStatement (context) {
 
-    const lhs = this.visit(context.arithmeticStatement[0])
-    const rhs = this.visit(context.arithmeticStatement[1])
+    const lhs = this.visit(context.additionStatement[0])
+    const rhs = this.visit(context.additionStatement[1])
 
     const operator = context.ComparisonOperator[0].image
 
@@ -172,7 +172,7 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   repeatStatement (context) {
 
-    const count = this.visit(context.arithmeticStatement)
+    const count = this.visit(context.additionStatement)
 
     let step = 0
 
@@ -209,14 +209,14 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   movementStatement (context) {
 
-    this.turtle.move(context.MovementOperator[0].image, this.visit(context.arithmeticStatement))
+    this.turtle.move(context.MovementOperator[0].image, this.visit(context.additionStatement))
   }
 
   directionStatement (context) {
 
     const direction = context.DirectionOperator[0].image
 
-    const degrees = this.visit(context.arithmeticStatement)
+    const degrees = this.visit(context.additionStatement)
 
     this.turtle.setHeading(direction, degrees)
   }
@@ -230,10 +230,10 @@ class TurtleInterpreter extends BaseCstVisitor {
 
     this.turtle.setXY({
 
-      x: this.visit(context.arithmeticStatement[0]),
-      y: this.visit(context.arithmeticStatement[1])
+      x: this.visit(context.additionStatement[0]),
+      y: this.visit(context.additionStatement[1])
     })
-  } 
+  }
 
   functionStatement (context) {
 
@@ -241,9 +241,9 @@ class TurtleInterpreter extends BaseCstVisitor {
 
     const functionScope = this.scope[context.IDENTIFIER[0].image]
 
-    if (context.arithmeticStatement) {
-      
-      for (const input of context.arithmeticStatement) {
+    if (context.additionStatement) {
+
+      for (const input of context.additionStatement) {
 
         this.scope[functionScope.inputs[index]] = this.visit(input, this.scope[context.IDENTIFIER[0].image])
       }
@@ -253,35 +253,70 @@ class TurtleInterpreter extends BaseCstVisitor {
     functionScope.fn()
   }
 
-  arithmeticStatement (context) {
+  additionStatement (context) {
 
-    const lhs = this.visit(context.atomicStatement[0])
+    let result = this.visit(context.lhs)
 
-    if (!context.atomicStatement[1]) {
+    if (context.rhs) {
 
-      return lhs
+      context.rhs.forEach((rhsOperand, index) => {
+
+        const rhsValue = this.visit(rhsOperand)
+
+        switch (context.AdditionOperator[index].image) {
+
+          case `+`:
+
+            result = result + rhsValue
+
+            return
+          case `-`:
+
+            result = result - rhsValue
+
+            return
+        }
+      })
     }
 
-    switch (context.ArithmeticOperator[0].image) {
+    return result
+  }
 
-      case `+`:
+  multiplicationStatement (context) {
 
-        return lhs + this.visit(context.atomicStatement[1])
-      case `-`:
+    let result = this.visit(context.lhs)
 
-        return lhs - this.visit(context.atomicStatement[1])
-      case `*`:
+    if (context.rhs) {
 
-        return lhs * this.visit(context.atomicStatement[1])
-      case `/`:
+      context.rhs.forEach((rhsOperand, index) => {
 
-        return lhs / this.visit(context.atomicStatement[1])
+        const rhsValue = this.visit(rhsOperand)
+
+        switch (context.MultiplicationOperator[index].image) {
+
+          case `*`:
+
+            result = result * rhsValue
+
+            return
+          case `/`:
+
+            result = result / rhsValue
+
+            return
+        }
+      })
     }
+
+    return result
   }
 
   atomicStatement (context) {
 
-    if (context.NUMBER) {
+    if (context.parenthesisStatement) {
+
+      return this.visit(context.parenthesisStatement)
+    } else if (context.NUMBER) {
 
       return parseFloat(context.NUMBER[0].image)
     } else if (context.INPUT) {
@@ -294,6 +329,11 @@ class TurtleInterpreter extends BaseCstVisitor {
 
       return this.visit(context.randomStatement)
     }
+  }
+
+  parenthesisStatement(context) {
+
+    return this.visit(context.additionStatement)
   }
 
   randomStatement (context) {

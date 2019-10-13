@@ -8,10 +8,12 @@ const Tokens = {}
 const createToken = function (options) {
 
   const token = chevrotain.createToken(options)
-  
+
   allTokens.push(token)
 
   Tokens[token.name] = token
+
+  return token
 }
 
 createToken({
@@ -112,32 +114,47 @@ createToken({
 })
 
 createToken({
-  name: `ArithmeticOperator`,
+  name: `LeftParen`,
+  pattern: /\(/
+})
+
+createToken({
+  name: `RightParen`,
+  pattern: /\)/
+})
+
+createToken({
+  name: `AdditionOperator`,
   pattern: Lexer.NA
 })
 
 createToken({
   name: `Plus`,
   pattern: /\+/,
-  categories: Tokens.ArithmeticOperator
+  categories: Tokens.AdditionOperator
 })
 
 createToken({
   name: `Minus`,
   pattern: /-/,
-  categories: Tokens.ArithmeticOperator
+  categories: Tokens.AdditionOperator
+})
+
+createToken({
+  name: `MultiplicationOperator`,
+  pattern: Lexer.NA
 })
 
 createToken({
   name: `Multiply`,
   pattern: /\*/,
-  categories: Tokens.ArithmeticOperator
+  categories: Tokens.MultiplicationOperator
 })
 
 createToken({
   name: `Divide`,
   pattern: /\//,
-  categories: Tokens.ArithmeticOperator
+  categories: Tokens.MultiplicationOperator
 })
 
 createToken({

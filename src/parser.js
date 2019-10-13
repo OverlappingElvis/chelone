@@ -84,18 +84,18 @@ module.exports = class TurtleParser extends Parser {
 
       $.CONSUME(Tokens.VAR)
 
-      $.SUBRULE($.arithmeticStatement)
+      $.SUBRULE($.additionStatement)
     })
 
     $.RULE(`conditionalStatement`, () => {
 
       $.CONSUME(Tokens.If)
 
-      $.SUBRULE($.arithmeticStatement)
+      $.SUBRULE($.additionStatement)
 
       $.CONSUME(Tokens.ComparisonOperator)
 
-      $.SUBRULE2($.arithmeticStatement)
+      $.SUBRULE2($.additionStatement)
 
       $.SUBRULE($.blockStatement)
     })
@@ -113,7 +113,7 @@ module.exports = class TurtleParser extends Parser {
 
         $.MANY(() => {
 
-          $.SUBRULE($.arithmeticStatement)
+          $.SUBRULE($.additionStatement)
         })
       })
     })
@@ -132,30 +132,30 @@ module.exports = class TurtleParser extends Parser {
 
       $.CONSUME(Tokens.SetXY)
 
-      $.SUBRULE($.arithmeticStatement)
+      $.SUBRULE($.additionStatement)
 
-      $.SUBRULE2($.arithmeticStatement)
+      $.SUBRULE2($.additionStatement)
     })
 
     $.RULE(`movementStatement`, () => {
 
       $.CONSUME(Tokens.MovementOperator)
 
-      $.SUBRULE($.arithmeticStatement)
+      $.SUBRULE($.additionStatement)
     })
 
     $.RULE(`directionStatement`, () => {
 
       $.CONSUME(Tokens.DirectionOperator)
 
-      $.SUBRULE($.arithmeticStatement)
+      $.SUBRULE($.additionStatement)
     })
 
     $.RULE(`repeatStatement`, () => {
 
       $.CONSUME(Tokens.Repeat)
 
-      $.SUBRULE($.arithmeticStatement)
+      $.SUBRULE($.additionStatement)
 
       $.OR([
         {
@@ -167,21 +167,44 @@ module.exports = class TurtleParser extends Parser {
       ])
     })
 
-    $.RULE(`arithmeticStatement`, () => {
+    $.RULE(`additionStatement`, () => {
 
-      $.SUBRULE($.atomicStatement)
+      $.SUBRULE($.multiplicationStatement, {
+        LABEL: `lhs`
+      })
 
-      $.OPTION(() => {
+      $.MANY(() => {
 
-        $.CONSUME(Tokens.ArithmeticOperator)
+        $.CONSUME(Tokens.AdditionOperator)
 
-        $.SUBRULE2($.atomicStatement)
+        $.SUBRULE2($.multiplicationStatement, {
+          LABEL: `rhs`
+        })
+      })
+    })
+
+    $.RULE(`multiplicationStatement`, () => {
+
+      $.SUBRULE($.atomicStatement, {
+        LABEL: `lhs`
+      })
+
+      $.MANY(() => {
+
+        $.CONSUME(Tokens.MultiplicationOperator)
+
+        $.SUBRULE2($.atomicStatement, {
+          LABEL: `rhs`
+        })
       })
     })
 
     $.RULE(`atomicStatement`, () => {
 
       $.OR([
+        {
+          ALT: () => $.SUBRULE($.parenthesisStatement)
+        },
         {
           ALT: () => $.CONSUME(Tokens.NUMBER)
         },
@@ -195,6 +218,15 @@ module.exports = class TurtleParser extends Parser {
           ALT: () => $.SUBRULE($.randomStatement)
         }
       ])
+    })
+
+    $.RULE(`parenthesisStatement`, () => {
+
+      $.CONSUME(Tokens.LeftParen)
+
+      $.SUBRULE($.additionStatement)
+
+      $.CONSUME(Tokens.RightParen)
     })
 
     $.RULE(`randomStatement`, () => {

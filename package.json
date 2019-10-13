@@ -9,7 +9,7 @@
   "author": "Jeremy Sher <OverlappingElvis@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "chevrotain": "^4.3.3",
+    "chevrotain": "^6.5.0",
     "commander": "^2.20.0"
   }
 }
