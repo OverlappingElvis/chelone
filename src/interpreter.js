@@ -394,6 +394,8 @@ class TurtleInterpreter extends BaseCstVisitor {
   }
 }
 
+const interpreter = new TurtleInterpreter()
+
 module.exports = {
   parse: (input) => {
 
@@ -412,8 +414,6 @@ module.exports = {
 
       throw new Error(parser.errors)
     }
-
-    const interpreter = new TurtleInterpreter()
 
     return interpreter.visit(cst)
   }
