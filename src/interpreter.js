@@ -334,6 +334,11 @@ class TurtleInterpreter extends BaseCstVisitor {
 
   atomicStatement (context) {
 
+    if (context.unaryMinusStatement) {
+
+      return this.visit(context.unaryMinusStatement)
+    }
+
     if (context.parenthesisStatement) {
 
       return this.visit(context.parenthesisStatement)
@@ -363,6 +368,11 @@ class TurtleInterpreter extends BaseCstVisitor {
 
       return this.visit(context.functionStatement)
     }
+  }
+
+  unaryMinusStatement (context) {
+
+    return -1 * this.visit(context.atomicStatement)
   }
 
   parenthesisStatement(context) {

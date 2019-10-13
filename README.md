@@ -37,22 +37,13 @@ If you're not familiar with Logo or turtle graphics, check out the Logo Foundati
 
 -   `if <valueA> = <valueB> [<statements>]`
     -   `=`, `!=`, `>`, `<`
--   `stop` (in a `repeat` or `procedure`) 
+-   `stop` in a `repeat` or `procedure` to end execution
+-   `output` in a `procedure` to return a value
 
 ### Calculation
 
--   `+`, `-`, `*`, `/` (one operation per statement, no precedence or grouping)
+-   `+`, `-`, `*`, `/`, unary `-`
 -   `random <max>` (random integer from 0 to max exclusive)
-
-### Bugs/To Implement
-
--   Proper unary minus
--   Better recursion (tail recursion?)
--   Procedure outputs
--   Scoped procedure inputs
--   Additional drawing tools
--   Module API
--   ???
 
 ## Chelone?
 

@@ -256,6 +256,9 @@ module.exports = class TurtleParser extends Parser {
 
       $.OR([
         {
+          ALT: () => $.SUBRULE($.unaryMinusStatement)
+        },
+        {
           ALT: () => $.SUBRULE($.parenthesisStatement)
         },
         {
@@ -274,6 +277,13 @@ module.exports = class TurtleParser extends Parser {
           ALT: () => $.SUBRULE($.functionStatement)
         }
       ])
+    })
+
+    $.RULE(`unaryMinusStatement`, () => {
+
+      $.CONSUME(Tokens.Minus)
+
+      $.SUBRULE($.atomicStatement)
     })
 
     $.RULE(`parenthesisStatement`, () => {
