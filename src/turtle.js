@@ -93,22 +93,7 @@ module.exports = class Turtle {
 
   normalizeHeading (degrees) {
 
-    if (degrees < 0) {
-
-      return this.normalizeHeading(360 + degrees)
-    }
-
-    if (degrees > 360) {
-
-      return this.normalizeHeading(degrees - 360)
-    }
-
-    if (degrees === 360) {
-
-      return 0
-    }
-
-    return degrees
+    return degrees % 360
   }
 
   setHeading (direction, degrees) {
