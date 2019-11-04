@@ -2,9 +2,7 @@
 
 ## Introduction
 
-Chelone is an interpreter for a subset of the [Logo](https://en.wikipedia.org/wiki/Logo_(programming_language)) programming language (mostly the turtle parts) implemented in [chevrotain](https://raw.githubusercontent.com/SAP/chevrotain/).
-
-This is *not* a full implementation of Logo, but is generally compatible with its syntax.
+Chelone is an interpreter for a subset of the [Logo](https://en.wikipedia.org/wiki/Logo_(programming_language)) programming language (mostly the turtle parts) implemented in [chevrotain](https://github.com/SAP/chevrotain).
 
 ## Usage
 
