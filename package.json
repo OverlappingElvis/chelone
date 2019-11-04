@@ -4,7 +4,7 @@
   "description": "Turtle graphics interpreter implemented using Chevrotain.",
   "main": "index.js",
   "scripts": {
-    "turtle": "node index.js"
+    "turtle": "node demo/index.js"
   },
   "author": "Jeremy Sher <OverlappingElvis@gmail.com>",
   "license": "MIT",
